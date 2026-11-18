@@ -42,7 +42,7 @@ const A=async(m,u,b)=>{const [path,qs]=u.split('?'),P=new URLSearchParams(qs||''
  if(r=='accounts'){if(m=='GET'){const q=(P.get('q')||'').toLowerCase(),pg=+P.get('page')||1,f=DB.ac.filter(a=>(a.email+a.label).toLowerCase().includes(q));return{total:f.length,page:pg,pages:Math.max(1,Math.ceil(f.length/10)),items:f.slice((pg-1)*10,pg*10).map(a=>({...a,links:DB.ln.filter(l=>l.aid==a.id).length}))}}
   if(m=='DELETE'){DB.ac=DB.ac.filter(a=>a.id!=id);DB.ln=DB.ln.filter(l=>l.aid!=id);return{ok:1}}
   if(!b.email||!b.pw||!b.secret)throw new Error('البريد وكلمة المرور والمفتاح مطلوبة');DB.ac.unshift({id:++DB.id,email:b.email,label:b.label,created:Date.now(),pw:b.pw});return{ok:1}}
- if(r=='links'){if(m=='GET'){const ai=+P.get('aid')||0,q=P.get('q')||'';return DB.ln.filter(l=>(!ai||l.aid==ai)&&l.token.includes(q)).map(l=>({...l,email:DB.ac.find(a=>a.id==l.aid)?.email,url:'https://anotp.com/info?'+l.token}))}
+ if(r=='links'){if(m=='GET'){const ai=+P.get('aid')||0,q=P.get('q')||'';return DB.ln.filter(l=>(!ai||l.aid==ai)&&l.token.includes(q)).map(l=>({...l,email:DB.ac.find(a=>a.id==l.aid)?.email,url:location.href.split('#')[0]+'#l-'+l.token}))}
   if(m=='DELETE'){DB.ln=DB.ln.filter(l=>l.token!=id);return{ok:1}}
   const n=+b.count,t=+b.total;if(!(n>=1&&t>=1))throw new Error('قيم غير صحيحة');for(let i=0;i<n;i++)DB.ln.unshift({token:rnd(9),aid:+b.aid,total:t,used:0});return{ok:1}}
  return{}};
